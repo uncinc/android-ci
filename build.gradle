@@ -5,7 +5,7 @@ plugins {
 }
 
 group 'nl.uncinc.androidci'
-version '1.0'
+version '0.2'
 sourceCompatibility = 1.8
 
 repositories {
@@ -35,7 +35,7 @@ apply plugin: 'maven'
 uploadArchives {
     repositories {
         mavenDeployer {
-            repository(url: uri('/Users/techwolf12/local-gradle-repo'))
+            repository(url: uri('/Users/techwolf12/gradletest'))
         }
     }
 }
@@ -45,10 +45,14 @@ bintray {
     key = project.hasProperty('bintrayApiKey') ? project.property('bintrayApiKey') : System.getenv('BINTRAY_API_KEY')
     configurations = ['archives']
     pkg {
-        repo = 'maven'
-        name = 'android-ci'
+        repo = 'android-ci'
+        name = 'UncIncAndroidCIPlugin'
         userOrg = 'uncinc'
         licenses = ['MIT']
         vcsUrl = 'https://github.com/uncinc/android-ci.git'
+        version {
+            name = '0.2'
+            vcsTag = '0.2'
+        }
     }
 }

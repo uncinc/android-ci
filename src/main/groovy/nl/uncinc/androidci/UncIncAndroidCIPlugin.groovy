@@ -1,6 +1,6 @@
 package nl.uncinc.androidci
 
-import com.android.builder.model.SigningConfig
+import com.android.build.gradle.internal.dsl.SigningConfig
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 
@@ -51,53 +51,12 @@ class UncIncAndroidCIPlugin implements Plugin<Project> {
         return androidci.versionName
     }
 
-    SigningConfig getSigningConfig() {
-        def signingConfig = new SigningConfig() {
-            @Override
-            String getName() {
-                return "androidcisigning"
-            }
-
-            @Override
-            File getStoreFile() {
-                return file(androidci.keystoreProperties['storeFile'])
-            }
-
-            @Override
-            String getStorePassword() {
-                return androidci.keystoreProperties['storePassword']
-            }
-
-            @Override
-            String getKeyAlias() {
-                return androidci.keystoreProperties['keyAlias']
-            }
-
-            @Override
-            String getKeyPassword() {
-                return androidci.keystoreProperties['keyPassword']
-            }
-
-            @Override
-            String getStoreType() {
-                return androidci.keystoreProperties['storeFileType']
-            }
-
-            @Override
-            boolean isV1SigningEnabled() {
-                return true
-            }
-
-            @Override
-            boolean isV2SigningEnabled() {
-                return true
-            }
-
-            @Override
-            boolean isSigningReady() {
-                return true
-            }
-        }
+    SigningConfig getSigningConfig(Project project) {
+        def signingConfig = new SigningConfig()
+        signingConfig.storeFile = project.file(androidci.keystoreProperties['storeFile'])
+        signingConfig.storePassword = androidci.keystoreProperties['storePassword']
+        signingConfig.keyAlias = androidci.keystoreProperties['keyAlias']
+        signingConfig.keyPassword = androidci.keystoreProperties['keyPassword']
         return signingConfig
     }
 
