@@ -52,7 +52,7 @@ class UncIncAndroidCIPlugin implements Plugin<Project> {
     }
 
     SigningConfig getSigningConfig(Project project) {
-        def signingConfig = new SigningConfig()
+        def signingConfig = new SigningConfig("CIStore")
         signingConfig.storeFile = project.file(androidci.keystoreProperties['storeFile'])
         signingConfig.storePassword = androidci.keystoreProperties['storePassword']
         signingConfig.keyAlias = androidci.keystoreProperties['keyAlias']
