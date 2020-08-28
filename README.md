@@ -15,7 +15,7 @@ buildscript {
         }
     }
     dependencies {
-        classpath 'nl.uncinc.androidci:UncIncAndroidCI:0.2'
+        classpath 'nl.uncinc.androidci:UncIncAndroidCI:0.3'
     }
 }
 ```
@@ -27,13 +27,14 @@ apply plugin: 'nl.uncinc.androidci'
 ```
 android {
     defaultConfig {
-        versionCode project.ext.androidciconfig.getVersionCode()
-        versionName project.ext.androidciconfig.getVersionName()
+        applicationId project.ext.androidci.getApplicationId("nl.uncinc.demo")
+        versionCode project.ext.androidci.getVersionCode()
+        versionName project.ext.androidci.getVersionName()
     }
 
     buildTypes {
         release {
-            signingConfig project.ext.androidciconfig.getSigningConfig(project)
+            signingConfig project.ext.androidci.getSigningConfig()
         }
     }
 }
@@ -51,11 +52,12 @@ storeFile=/Full/Path/To/keystore.jks
 ```
 
 # Possible properties
-| Property                    | Purpose                                                                          | Default Value                                                                  |
-|-----------------------------|----------------------------------------------------------------------------------|--------------------------------------------------------------------------------|
-| androidci.signingProperties | Full path to the file with the signing configuration. Should be available to CI. | android-app-signing.properties (and if it does not exist. The Debug build key) |
-| androidci.versionCode       | Android versionCode, use an Integer value                                        | 1                                                                              |
-| androidci.versionName       | Android versionName, should be a String                                          | Git hash of the repo                                                           |
+| Property                    | Purpose                                                                            | Default Value                                                                  |
+|-----------------------------|------------------------------------------------------------------------------------|--------------------------------------------------------------------------------|
+| androidci.signingProperties | Full path to the file with the signing configuration. Should be available to CI.   | android-app-signing.properties (and if it does not exist. The Debug build key) |
+| androidci.versionCode       | Android versionCode, use an Integer value                                          | 1                                                                              |
+| androidci.versionName       | Android versionName, should be a String                                            | Git hash of the repo                                                           |
+| androidci.applicationId     | Override for application identifier, for multiple app flavours (e.g. Beta release) | Parameter given in the android defaultConfig                                   |        
 
 # License 
 MIT License
