@@ -15,7 +15,7 @@
 The security point of contact is [Christiaan de Die le Clercq](https://github.com/techwolf12). 
 
 In case Christiaan does not respond within a reasonable time, the secondary point
-of contact is [Roderik de Langen](https://github.com/raro). 
+of contact is [Roderik de Langen](https://github.com/rarothedude). 
 
 <a name="vulnerability-management"></a>
 ## Vulnerability Management Plans
