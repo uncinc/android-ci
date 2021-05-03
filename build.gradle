@@ -51,8 +51,8 @@ bintray {
         licenses = ['MIT']
         vcsUrl = 'https://github.com/uncinc/android-ci.git'
         version {
-            name = '0.2'
-            vcsTag = '0.2'
+            name = '0.3'
+            vcsTag = '0.3'
         }
     }
 }

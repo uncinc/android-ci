@@ -11,7 +11,7 @@ The current library is an internal testing alpha release, more documentation and
 buildscript {
     repositories {
         maven {
-            url  "https://dl.bintray.com/uncinc/android-ci"
+            url  "https://releases.uncinc.nl/maven"
         }
     }
     dependencies {
