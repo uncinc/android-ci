@@ -1,6 +1,7 @@
 package nl.uncinc.androidci
 
-import com.android.build.gradle.internal.dsl.SigningConfig
+import com.android.build.api.variant.impl.SigningConfigImpl
+import com.android.builder.model.SigningConfig
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 
@@ -68,12 +69,28 @@ class UncIncAndroidCIPlugin implements Plugin<Project> {
     }
 
     SigningConfig getSigningConfig() {
-        def signingConfig = new SigningConfig("CIStore")
+        def signingConfig = new SigningConfigImpl("CIStore")
         signingConfig.storeFile = project.file(androidci.keystoreProperties['storeFile'])
         signingConfig.storePassword = androidci.keystoreProperties['storePassword']
         signingConfig.keyAlias = androidci.keystoreProperties['keyAlias']
         signingConfig.keyPassword = androidci.keystoreProperties['keyPassword']
         return signingConfig
+    }
+
+    File getStoreFile() {
+        return project.file(androidci.keystoreProperties['storeFile'])
+    }
+
+    String getStorePassword() {
+        return androidci.keystoreProperties['storePassword']
+    }
+
+    String getKeyAlias() {
+        return androidci.keystoreProperties['keyAlias']
+    }
+
+    String getKeyPassword() {
+        return androidci.keystoreProperties['keyPassword']
     }
 
     String getGitHash() {
