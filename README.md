@@ -1,11 +1,11 @@
 # android-ci
  [ ![Download](https://api.bintray.com/packages/uncinc/android-ci/UncIncAndroidCIPlugin/images/download.svg) ](https://bintray.com/uncinc/android-ci/UncIncAndroidCIPlugin/_latestVersion)
- 
-Helper library to automatically build [~~and publish~~](https://github.com/uncinc/android-ci/issues/1) an Android app via CI.  
 
-The current library is an internal testing alpha release, more documentation and features will be available in the future. Feature requests are welcome, please submit a Github issue.  
+Helper library to automatically build [~~and publish~~](https://github.com/uncinc/android-ci/issues/1) an Android app via CI.
 
-## Setup
+The current library is an internal testing alpha release, more documentation and features will be available in the future. Feature requests are welcome, please submit a Github issue.
+
+# Setup
 1. Include the repository, to your root build.gradle add the following contents:
 ```gradle
 buildscript {
@@ -15,7 +15,7 @@ buildscript {
         }
     }
     dependencies {
-        classpath 'nl.uncinc.androidci:UncIncAndroidCI:0.3'
+        classpath 'nl.uncinc.androidci:UncIncAndroidCI:0.4'
     }
 }
 ```
@@ -32,9 +32,18 @@ android {
         versionName project.ext.androidci.getVersionName()
     }
 
+    signingConfigs {
+        release {
+            storeFile = project.ext.androidci.getStoreFile()
+            storePassword = project.ext.androidci.getStorePassword()
+            keyAlias = project.ext.androidci.getKeyAlias()
+            keyPassword = project.ext.androidci.getKeyPassword()
+        }
+    }
+
     buildTypes {
         release {
-            signingConfig project.ext.androidci.getSigningConfig()
+            signingConfig signingConfigs.release
         }
     }
 }
@@ -51,15 +60,23 @@ storeFile=/Full/Path/To/keystore.jks
 ./gradlew -Pandroidci.signingProperties=/Full/Path/To/signing.properties -Pandroidci.versionCode=2
 ```
 
-# Possible properties
+## Possible properties
 | Property                    | Purpose                                                                            | Default Value                                                                  |
 |-----------------------------|------------------------------------------------------------------------------------|--------------------------------------------------------------------------------|
 | androidci.signingProperties | Full path to the file with the signing configuration. Should be available to CI.   | android-app-signing.properties (and if it does not exist. The Debug build key) |
 | androidci.versionCode       | Android versionCode, use an Integer value                                          | 1                                                                              |
 | androidci.versionName       | Android versionName, should be a String                                            | Git hash of the repo                                                           |
-| androidci.applicationId     | Override for application identifier, for multiple app flavours (e.g. Beta release) | Parameter given in the android defaultConfig                                   |        
+| androidci.applicationId     | Override for application identifier, for multiple app flavours (e.g. Beta release) | Parameter given in the android defaultConfig                                   |
 
-# License 
+# Release
+
+This package is released to our custom Maven repository, https://releases.uncinc.nl/maven. There is currently no automatic CI, so the workaround is to build the package to a local directory, and sync that to the releases.uncinc.nl server. To build, run:
+
+```
+./gradlew uploadArchives
+```
+
+# License
 MIT License
 
 Copyright (c) 2020 Unc Inc
