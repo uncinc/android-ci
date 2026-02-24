@@ -1,17 +1,20 @@
 plugins {
     id 'java-gradle-plugin'
     id 'groovy'
-    id "com.jfrog.bintray" version "1.8.5"
+    id 'maven-publish'
 }
 
-group 'nl.uncinc.androidci'
-version '0.4'
-sourceCompatibility = 1.11
+group = 'nl.uncinc.androidci'
+version = '1.0'
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_11
+    targetCompatibility = JavaVersion.VERSION_11
+}
 
 repositories {
     mavenCentral()
     google()
-    jcenter()
 }
 
 gradlePlugin {
@@ -24,35 +27,24 @@ gradlePlugin {
 }
 
 dependencies {
-    compile gradleApi()
-    compile localGroovy()
-    compile "com.android.tools.build:gradle:7.4.0"
-    testCompile group: 'junit', name: 'junit', version: '4.12'
+    implementation gradleApi()
+    implementation localGroovy()
+    implementation 'com.android.tools.build:gradle:8.7.3'
+    testImplementation 'junit:junit:4.13.2'
 }
 
-apply plugin: 'maven'
-
-uploadArchives {
+publishing {
     repositories {
-        mavenDeployer {
-            repository(url: uri('/Users/techwolf12/gradletest'))
-        }
-    }
-}
-
-bintray {
-    user = project.hasProperty('bintrayUser') ? project.property('bintrayUser') : System.getenv('BINTRAY_USER')
-    key = project.hasProperty('bintrayApiKey') ? project.property('bintrayApiKey') : System.getenv('BINTRAY_API_KEY')
-    configurations = ['archives']
-    pkg {
-        repo = 'android-ci'
-        name = 'UncIncAndroidCIPlugin'
-        userOrg = 'uncinc'
-        licenses = ['MIT']
-        vcsUrl = 'https://github.com/uncinc/android-ci.git'
-        version {
-            name = '0.3'
-            vcsTag = '0.3'
+        maven {
+            name = 'uncinc'
+            url = uri('https://releases.uncinc.nl/maven')
+            // Credentials configured via gradle.properties or environment variables:
+            //   ORG_GRADLE_PROJECT_uncincMavenUser
+            //   ORG_GRADLE_PROJECT_uncincMavenPassword
+            credentials {
+                username = findProperty('uncincMavenUser') ?: ''
+                password = findProperty('uncincMavenPassword') ?: ''
+            }
         }
     }
 }

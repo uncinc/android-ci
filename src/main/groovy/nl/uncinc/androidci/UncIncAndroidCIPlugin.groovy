@@ -1,14 +1,21 @@
 package nl.uncinc.androidci
 
-import com.android.build.api.variant.impl.SigningConfigImpl
-import com.android.builder.model.SigningConfig
 import org.gradle.api.Plugin
 import org.gradle.api.Project
+import org.gradle.process.ExecOperations
 
+import javax.inject.Inject
 
 class UncIncAndroidCIPlugin implements Plugin<Project> {
     def androidci = new Properties()
     Project project
+
+    private final ExecOperations execOperations
+
+    @Inject
+    UncIncAndroidCIPlugin(ExecOperations execOperations) {
+        this.execOperations = execOperations
+    }
 
     void apply(Project project) {
         this.project = project
@@ -37,7 +44,6 @@ class UncIncAndroidCIPlugin implements Plugin<Project> {
             keystoreProperties.setProperty("storePassword", 'android')
             keystoreProperties.setProperty("storeFile", 'debug.keystore')
             keystoreProperties.setProperty("storeFileType", 'jks')
-
         }
         androidci.keystoreProperties = keystoreProperties
 
@@ -49,7 +55,7 @@ class UncIncAndroidCIPlugin implements Plugin<Project> {
                 println 'Signing: ' + androidci.signingProperies
                 println 'versionCode: ' + androidci.versionCode
                 println 'versionName: ' + androidci.versionName
-                println 'androidApplicationId': + androidci.applicationId
+                println 'androidApplicationId: ' + androidci.applicationId
             }
         }
     }
@@ -66,15 +72,6 @@ class UncIncAndroidCIPlugin implements Plugin<Project> {
         androidci.applicationId = project.hasProperty('androidci.applicationId')
                 ? project.getProperty('androidci.applicationId') : appId
         return androidci.applicationId
-    }
-
-    SigningConfig getSigningConfig() {
-        def signingConfig = new SigningConfigImpl("CIStore")
-        signingConfig.storeFile = project.file(androidci.keystoreProperties['storeFile'])
-        signingConfig.storePassword = androidci.keystoreProperties['storePassword']
-        signingConfig.keyAlias = androidci.keystoreProperties['keyAlias']
-        signingConfig.keyPassword = androidci.keystoreProperties['keyPassword']
-        return signingConfig
     }
 
     File getStoreFile() {
@@ -94,11 +91,11 @@ class UncIncAndroidCIPlugin implements Plugin<Project> {
     }
 
     String getGitHash() {
-            def stdout = new ByteArrayOutputStream()
-            project.exec {
-                commandLine 'git', 'rev-parse', '--short', 'HEAD'
-                standardOutput = stdout
-            }
-            return stdout.toString().trim()
+        def stdout = new ByteArrayOutputStream()
+        execOperations.exec {
+            commandLine 'git', 'rev-parse', '--short', 'HEAD'
+            standardOutput = stdout
+        }
+        return stdout.toString().trim()
     }
 }
